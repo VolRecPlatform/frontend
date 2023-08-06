@@ -1,0 +1,7 @@
+body{
+    background-color: #f3f3f3;
+}
+.centered-table {
+    margin: 0 auto; /* 水平居中 */
+    text-align: center; /* 内容居中 */
+}

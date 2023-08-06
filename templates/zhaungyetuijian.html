@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{url_for('static',filename='bootstrap/bootstrap.4.6.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/init.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/index.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/detail.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='bootstrap/bootstrap-table.css')}}">
+    <script src="{{url_for('static',filename='jquery/jquery.3.6.min.js')}}"></script>
+    <script src="{{url_for('static',filename='bootstrap/bootstrap.min.js')}}"></script>
+    <script src="{{url_for('static',filename='bootstrap/bootstrap-table.js')}}"></script>
+    <script src="{{url_for('static',filename='bootstrap/bootstrap-table-zh-CN.js')}}"></script>
+    <title>高考推荐</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <img class="side-question-avatar" src="{{url_for('static',filename='images/logo.jpg')}}" alt="">
+            <a class="navbar-brand">高考志愿推荐平台</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/">首页 <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item" >
+                    <a class="nav-link" href="{{url_for('qa.public_tuijian')}}">高考推荐</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('qa.public_qa')}}">分数线预测</a>
+                    </li>
+                    <li class="nav-item ml-2">
+                        <form class="form-inline my-2 my-lg-0" method="GET" action="{{ url_for('qa.search')}}">
+                            <input class="form-control mr-sm-2" type="search" placeholder="关键字" aria-label="Search" name="q">
+                            <button class="btn btn-outline-success my-2 my-sm-0 active" type="submit">搜索</button>
+                        </form>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    {%  if user %}
+                        <li class="nav-item">
+                          <span class="nav-link">{{ user.username }}</span>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="{{url_for('auth.loginout')}}">退出登录</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('auth.login')}}">登录</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('auth.register')}}">注册</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row border border-light" style="margin-top: 20px;">
+            <div class="col"></div>
+            <div class="col-10" style="background-color: #fff;padding: 20px;">
+                <h3 class="page-title">高考推荐:{{ school.school_name }}</h3>
+
+                <div class="form-group">
+
+                </div>
+                <div class="form-group" style="text-align: right;">
+                </div>
+                  <form action="{{url_for('qa.public_tuijian_zhaungye2')}}" method="GET">
+                    <div class="form-group">
+                       <input type="hidden" id="special" name="special" value="{{ type }}" />
+                    </div>
+                    <div class="form-group">
+                       <input type="hidden" id="province" name="province" value="{{ province_id }}" />
+                    </div>
+                      <div class="form-group">
+                       <input type="hidden" id="school_id" name="school_id" value="{{ school.school_id }}" />
+                    </div>
+                      <div class="form-group">
+                       <input type="hidden" id="score" name="score" value="{{ score }}" />
+                    </div>
+                      <div class="form-group">
+                       <input type="hidden" id="rank" name="rank" value="{{ rank }}" />
+                    </div>
+                      <div class="form-group">
+                       <input type="hidden" id="proscore" name="proscore" value="{{ proscore }}" />
+                    </div>
+                    <div class="form-group">
+                         <select name="xuanze" id="select">
+                         <option value="all">全部</option>
+                         <option value="a">可保底</option>
+                         <option value="b">较稳妥</option>
+                         <option value="c">可冲刺</option>
+                         </select>
+                    </div>
+                      <div class="form-group">
+                         <button type="submit" class="btn btn-primary">筛选</button>
+                    </div>
+                  </form>
+            </div>
+            <div class="col"></div>
+            <div id="tbContainer" class="centered-table">
+            <ul class="question-ul">
+            <table id="tb">
+                        <thead>
+                            <tr>
+                                <th scope="col">专业</th>
+                                <th scope="col">概率</th>
+                                <th scope="col">推荐等级</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                         {% for k in count1 %}
+                          <tr>
+                              <th scope="row">{{spname[count1[k]] }}</th>
+                              <td>{{ math.floor(gailv[count1[k]]) }}%</td>
+                              <td>{{ type_recommend[count1[k]] }}</td>
+                          </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+            </ul>
+            </div>
+            <div class="col"></div>
+        </div>
+    </div>
+<script>
+    $("#tb").bootstrapTable({
+        pagination: true,   //是否显示分页条
+        pageSize: 10,   //一页显示的行数
+        paginationLoop: false,   //是否开启分页条无限循环，最后一页时点击下一页是否转到第一页
+        pageList: [5, 10, 20]   //选择每页显示多少行，数据过少时可能会没有效果
+    });
+</script>
+</body>
+
+</html>

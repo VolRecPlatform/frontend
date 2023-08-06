@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{url_for('static',filename='bootstrap/bootstrap.4.6.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/init.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/index.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/detail.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='bootstrap/bootstrap-table.css')}}">
+    <script src="{{url_for('static',filename='jquery/jquery.3.6.min.js')}}"></script>
+    <script src="{{url_for('static',filename='bootstrap/bootstrap.min.js')}}"></script>
+    <script src="{{url_for('static',filename='bootstrap/bootstrap-table.js')}}"></script>
+    <script src="{{url_for('static',filename='bootstrap/bootstrap-table-zh-CN.js')}}"></script>
+    <title>分数线预测</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <img class="side-question-avatar" src="{{url_for('static',filename='images/logo.jpg')}}" alt="">
+            <a class="navbar-brand">高考志愿推荐平台</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/">首页 <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item" >
+                    <a class="nav-link" href="{{url_for('qa.public_tuijian')}}">高考推荐</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('qa.public_qa')}}">分数线预测</a>
+                    </li>
+                    <li class="nav-item ml-2">
+                        <form class="form-inline my-2 my-lg-0" method="GET" action="{{ url_for('qa.search')}}">
+                            <input class="form-control mr-sm-2" type="search" placeholder="关键字" aria-label="Search" name="q">
+                            <button class="btn btn-outline-success my-2 my-sm-0 active" type="submit">搜索</button>
+                        </form>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    {%  if user %}
+                        <li class="nav-item">
+                          <span class="nav-link">{{ user.username }}</span>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="{{url_for('auth.loginout')}}">退出登录</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('auth.login')}}">登录</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('auth.register')}}">注册</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row" style="margin-top: 20px;">
+            <div class="col"></div>
+            <div class="col-10" style="background-color: #fff;padding: 20px;">
+                <h3 class="page-title">分数线预测</h3>
+                <div class="form-group" style="text-align: right;">
+                </div>
+                  <form action="{{url_for('qa.public_jieguo')}}" method="GET">
+                    <div class="form-group">
+                       <select name="province" id="pet-select">
+                         <option value="北京市">北京</option>
+                         <option value="天津市">天津</option>
+                         <option value="河北省">河北</option>
+                         <option value="山西省">山西</option>
+                         <option value="内蒙古自治区">内蒙古自治区</option>
+                         <option value="辽宁省">辽宁</option>
+                         <option value="吉林省">吉林</option>
+                         <option value="黑龙江省">黑龙江</option>
+                         <option value="上海市">上海</option>
+                         <option value="江苏省">江苏</option>
+                         <option value="浙江省">浙江</option>
+                         <option value="安徽省">安徽</option>
+                         <option value="福建省">福建</option>
+                         <option value="江西省">江西</option>
+                         <option value="山东省">山东</option>
+                         <option value="河南省">河南</option>
+                         <option value="湖北省">湖北</option>
+                         <option value="湖南省">湖南</option>
+                         <option value="广东省">广东</option>
+                         <option value="广西壮族自治区">广西壮族自治区</option>
+                         <option value="海南省">海南</option>
+                         <option value="重庆市">重庆</option>
+                         <option value="四川省">四川</option>
+                         <option value="贵州省">贵州</option>
+                         <option value="云南省">云南</option>
+                         <option value="西藏自治区">西藏</option>
+                         <option value="陕西省">陕西</option>
+                         <option value="甘肃省">甘肃</option>
+                         <option value="青海省">青海</option>
+                         <option value="宁夏回族自治区">宁夏回族自治区</option>
+                         <option value="新疆维吾尔自治区">新疆维吾尔自治区</option>
+                         <option value="台湾省">台湾</option>
+                         <option value="香港特别行政区">香港特别行政区</option>
+                         <option value="澳门特别行政区">澳门特别行政区</option>
+                         </select>
+                    </div>
+                    <div class="form-group">
+                         <fieldset>
+                             <legend>文理</legend>
+                             <input type="radio" name="special" value="文科">文科<br>
+                             <input type="radio" name="special" value="理科">理科<br>
+                         </fieldset>
+                    </div>
+                       <div class="form-group">
+                    </div>
+                      <div class="form-group">
+                         <button type="submit" class="btn btn-primary">提交</button>
+                    </div>
+                  </form>
+            </div>
+            <div class="col"></div>
+            <div id="tbContainer" class="centered-table">
+            <ul class="question-ul">
+            <table id="tb">
+                        <thead>
+                            <tr>
+                                <th scope="col">省份</th>
+                                <th scope="col">学校</th>
+                                <th scope="col">最低排名</th>
+                                <th scope="col">最低分</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                       {% for i in jishu %}
+                          <tr>
+                              <th scope="row">{{provincelist[i]}}</th>
+                              <td><a href="{{url_for('qa.public_fenshuxian_yuce',school_id = schoollist2[i],type=type, province_id=provincelist2[i])}}">{{ schoollist[i] }}</a></td>
+                              <td>{{ min_sectionlist[i] }}</td>
+                              <td>{{ min_scorelist[i] }}</td>
+                          </tr>
+                        {% endfor %}
+                        </tbody>
+                </table>
+            </ul>
+            </div>
+            <div class="col"></div>
+        </div>
+    </div>
+<script>
+    $("#tb").bootstrapTable({
+        pagination: true,   //是否显示分页条
+        pageSize: 10,   //一页显示的行数
+        paginationLoop: false,   //是否开启分页条无限循环，最后一页时点击下一页是否转到第一页
+        pageList: [5, 10, 20]   //选择每页显示多少行，数据过少时可能会没有效果
+    });
+</script>
+</body>
+</html>
